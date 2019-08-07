@@ -11,6 +11,10 @@ public class Endereco {
 	private String bairro;
 	private String numero;
 
+	public Endereco() {
+		
+	}
+	
 	public Endereco(String rua, String cep, String estado, String cidade, String bairro, String numero) {
 		super();
 		this.rua = rua;
@@ -71,7 +75,7 @@ public class Endereco {
 
 	@Override
 	public String toString() {
-		return "Rua " + rua + ", " + numero + ", " + bairro + " - " + cep + " (" + cidade + "/" + estado + ")";
+		return "Id: " + id +  " | Rua " + rua + ", " + numero + ", " + bairro + " - " + cep + " (" + cidade + "/" + estado + ")";
 	}
 
 	public int getId() {
