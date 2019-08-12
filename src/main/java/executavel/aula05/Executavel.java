@@ -1,8 +1,9 @@
-package executavel;
+package executavel.aula05;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import model.dao.aula05.ClienteDAO;
 import model.dao.aula05.EnderecoDAO;
 import model.dao.aula05.TelefoneDAO;
 import model.entity.aula05.Cliente;
@@ -18,24 +19,86 @@ public class Executavel {
 		// criarClientesMostrarNoConsole();
 
 		// Métodos de testes da aula 2
-		// salvarNovoEnderecoNoBanco();
-
+		//criarEndereco();
 		//excluirEndereco(1);
-		
 		//atualizarEndereco();
-		
-		//consultarEndereco(22);
-		
-		consultarEnderecos();
+		//consultarEndereco(25);
+		//consultarEnderecos();
 
 		// salvarTelefonesAleatorios();
-
 		// excluirTelefone();
-
 		// atualizarTelefone();
-
 		// consultarTelefones();
+		
+		//salvarNovoCliente();
+		//alterarCliente(3);
+		//excluirCliente(1);
+		//consultarCliente(2);
+		//consultarClientes();
+	}
+	
+	private static void consultarCliente(int id) {
+		ClienteDAO clienteDAO = new ClienteDAO();
+		Cliente clienteConsultado = clienteDAO.consultarPorId(id);
+		
+		System.out.println(clienteConsultado);
+	}
+	
+	private static void excluirCliente(int id) {
+		ClienteDAO clienteDAO = new ClienteDAO();
+		if (clienteDAO.excluir(id)) {
+			System.out.println("Excluiu");
+		} else {
+			System.out.println("Não excluiu");
+		}
+	}
 
+	private static void alterarCliente(int id) {
+		ClienteDAO clienteDAO = new ClienteDAO();
+		Cliente cli = clienteDAO.consultarPorId(id);
+		cli.setNome("Pedro");
+		cli.setSobrenome("Alterado de Souza");
+		
+		if(clienteDAO.alterar(cli)) {
+			System.out.println("Alterou o cliente");
+		}else {
+			System.out.println("Não alterou o cliente");
+		}
+	}
+
+	private static void consultarClientes() {
+		ClienteDAO clienteDAO = new ClienteDAO();
+		System.out.println("************* Todos os clientes *************");
+		System.out.println("");
+		ArrayList<Cliente> todosOsClientes = clienteDAO.consultarTodos();
+
+		for (Cliente cli : todosOsClientes) {
+			System.out.println(cli);
+		}
+		System.out.println("");
+		System.out.println("**********************************************");
+		
+	}
+
+	private static void salvarNovoCliente() {
+		Cliente c = new Cliente("José", "da Silva Sauro", "55577788811", 
+				criarTelefones(), 
+				criarEndereco());
+		ClienteDAO cliDAO = new ClienteDAO();
+		c = cliDAO.salvar(c);
+		
+		if (c.getId() > 0) {
+			System.out.println("Cliente salvo com sucesso. ID: " + c.getId());
+			System.out.println("************* Telefones do cliente *************");
+			System.out.println("");
+			for(Telefone t: c.getTelefones()) {
+				System.out.println(t);
+			}
+			System.out.println("");
+			System.out.println("**********************************************");
+		} else {
+			System.out.println("Não salvou cliente");
+		}
 	}
 
 	private static void consultarEnderecos() {
@@ -158,7 +221,7 @@ public class Executavel {
 		// TODO exercício 2 -> salvar os clientes no banco
 	}
 
-	private static void salvarNovoEnderecoNoBanco() {
+	private static Endereco criarEndereco() {
 		Random ran = new Random();
 		String cep = "" + ran.nextInt(10) + ran.nextInt(10) + ran.nextInt(10) + ran.nextInt(10) + ran.nextInt(10)
 				+ ran.nextInt(10) + ran.nextInt(10) + ran.nextInt(10);
@@ -170,11 +233,13 @@ public class Executavel {
 		EnderecoDAO dao = new EnderecoDAO();
 		novoEndereco = dao.salvar(novoEndereco);
 
-		if (novoEndereco.getId() > 0) {
-			System.out.println("Endereço salvo com sucesso.");
-		} else {
-			System.out.println("Endereço não foi salvo.");
-		}
+//		if (novoEndereco.getId() > 0) {
+//			System.out.println("Endereço salvo com sucesso.");
+//		} else {
+//			System.out.println("Endereço não foi salvo.");
+//		}
+		
+		return novoEndereco;
 	}
 
 	/**

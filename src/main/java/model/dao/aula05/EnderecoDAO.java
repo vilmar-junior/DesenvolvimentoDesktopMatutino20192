@@ -15,8 +15,9 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 
 	public Endereco salvar(Endereco novoEndereco) {
 		Connection conexao = Banco.getConnection();
-		String sql = " INSERT INTO ENDERECO(RUA, CEP, ESTADO, CIDADE, BAIRRO, NUMERO) " + " VALUES (?,?,?,?,?,?)";
+		String sql = " INSERT INTO ENDERECO (RUA, CEP, ESTADO, CIDADE, BAIRRO, NUMERO) " + " VALUES (?,?,?,?,?,?)";
 		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql, PreparedStatement.RETURN_GENERATED_KEYS);
+		ResultSet rs = null;
 		try {
 			stmt.setString(1, novoEndereco.getRua());
 			stmt.setString(2, novoEndereco.getCep());
@@ -27,16 +28,18 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 
 			stmt.execute();
 
-			ResultSet rs = stmt.getGeneratedKeys();
-
+			rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
 				int idGerado = rs.getInt(1);
 				novoEndereco.setId(idGerado);
 			}
-
 		} catch (SQLException e) {
 			System.out.println("Erro ao inserir novo endereço.");
 			System.out.println("Erro: " + e.getMessage());
+		}finally {
+			Banco.closeResultSet(rs);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conexao);
 		}
 
 		return novoEndereco;
@@ -53,6 +56,9 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 		} catch (SQLException e) {
 			System.out.println("Erro ao excluir endereço.");
 			System.out.println("Erro: " + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(statement);
+			Banco.closeConnection(conexao);
 		}
 
 		return quantidadeRegistrosExcluidos > 0;
@@ -78,6 +84,9 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 		} catch (SQLException e) {
 			System.out.println("Erro ao inserir novo endereço.");
 			System.out.println("Erro: " + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conexao);
 		}
 
 		return quantidadeRegistrosAtualizados == 1;
@@ -86,12 +95,12 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 	public Endereco consultarPorId(int id) {
 		Connection conexao = Banco.getConnection();
 		String sql = " SELECT * FROM ENDERECO WHERE ID=?";
-		
+		ResultSet resultadoDaConsulta = null;
 		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
 		Endereco enderecoBuscado = null;
 		try {
 			stmt.setInt(1, id);
-			ResultSet resultadoDaConsulta = stmt.executeQuery();
+			resultadoDaConsulta = stmt.executeQuery();
 			
 			if(resultadoDaConsulta.next()) {
 				enderecoBuscado = construirEnderecoDoResultSet(resultadoDaConsulta);
@@ -99,6 +108,10 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 		}catch(SQLException ex) {
 			System.out.println("Erro ao consultar endereço por id: " + id);
 			System.out.println("Erro: " + ex.getMessage());
+		}finally {
+			Banco.closeResultSet(resultadoDaConsulta);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conexao);
 		}
 		
 		return enderecoBuscado;
@@ -107,12 +120,12 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 	public ArrayList<Endereco> consultarTodos() {
 		Connection conexao = Banco.getConnection();
 		String sql = " SELECT * FROM ENDERECO";
-		
+		ResultSet resultadoDaConsulta = null;
 		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
 		ArrayList<Endereco> enderecos = new ArrayList<Endereco>();
 		
 		try {
-			ResultSet resultadoDaConsulta = stmt.executeQuery();
+			resultadoDaConsulta = stmt.executeQuery();
 			
 			while(resultadoDaConsulta.next()) {
 				Endereco enderecoBuscado = construirEnderecoDoResultSet(resultadoDaConsulta);
@@ -121,6 +134,10 @@ public class EnderecoDAO implements BaseDAO<Endereco> {
 		}catch(SQLException ex) {
 			System.out.println("Erro ao consultar endereços cadastrados ");
 			System.out.println("Erro: " + ex.getMessage());
+		}finally {
+			Banco.closeResultSet(resultadoDaConsulta);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conexao);
 		}
 		
 		return enderecos;

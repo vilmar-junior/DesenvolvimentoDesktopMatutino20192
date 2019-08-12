@@ -1,6 +1,5 @@
 package model.entity.aula05;
 
-
 public class Telefone {
 	private int id;
 	private int idCliente;
@@ -68,7 +67,7 @@ public class Telefone {
 
 	@Override
 	public String toString() {
-		return "\n" + "+" + codigoPais + "(" + ddd + ")" + numero + " - Linha: " + tipoLinha + " "
+		return " id: " + id + " |idCliente: " + idCliente + "| +" + codigoPais + "(" + ddd + ")" + numero + " - Linha: " + tipoLinha + " "
 				+ (ativo ? "Ativa" : "Inativa");
 	}
 

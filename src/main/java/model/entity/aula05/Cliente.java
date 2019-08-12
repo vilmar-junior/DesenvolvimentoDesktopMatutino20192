@@ -3,12 +3,17 @@ package model.entity.aula05;
 import java.util.ArrayList;
 
 public class Cliente {
+	private int id;
 	private String nome;
 	private String sobrenome;
 	private String cpf;
 	private ArrayList<Telefone> telefones;
 	private Endereco endereco;
 
+	public Cliente() {
+		
+	}
+	
 	public Cliente(String nome, String sobrenome, String cpf, ArrayList<Telefone> telefones, Endereco endereco) {
 		super();
 		this.nome = nome;
@@ -72,5 +77,13 @@ public class Cliente {
 		}
 
 		return mensagem;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
