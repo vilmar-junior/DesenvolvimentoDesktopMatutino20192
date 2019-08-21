@@ -6,15 +6,32 @@ import java.util.Random;
 import model.dao.aula05.ClienteDAO;
 import model.dao.aula05.EnderecoDAO;
 import model.dao.aula05.TelefoneDAO;
+import model.dao.lista1.EmpregadoDAO;
 import model.entity.aula05.Cliente;
 import model.entity.aula05.Endereco;
 import model.entity.aula05.Telefone;
+import model.entity.lista1.Diretor;
+import model.entity.lista1.Empregado;
+import model.entity.lista1.EmpregadoOperacional;
+import model.entity.lista1.Gerente;
 
 public class Executavel {
 
 	private static final String CODIGO_PAIS_BRASIL = "55";
 
 	public static void main(String[] args) {
+		Diretor d = new Diretor("Edson Arantes", "12345678901", 'M', 75, 12000.5, 500); 
+		Gerente g = new Gerente("Artur Antunes", "11111111111", 'M', 60, 8000.5, 200);
+		EmpregadoOperacional op = new EmpregadoOperacional("José das Couves", "99999999999", 'M', 20, 1000.5);
+		
+		EmpregadoDAO dao = new EmpregadoDAO();
+//		dao.salvar(d);
+//		dao.salvar(g);
+//		dao.salvar(op);
+		
+		Empregado emp = dao.consultarPorId(2);
+		System.out.println(emp.toString());
+		
 		// exercício 1
 		// criarClientesMostrarNoConsole();
 

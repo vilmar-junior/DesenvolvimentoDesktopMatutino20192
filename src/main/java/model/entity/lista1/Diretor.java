@@ -21,4 +21,9 @@ public class Diretor extends Empregado {
 	public void setComissao(double comissao) {
 		this.comissao = comissao;
 	}
+
+	@Override
+	public String toString() {
+		return "Diretor [comissao=" + comissao + "]" + super.toString();
+	}
 }

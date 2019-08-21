@@ -24,6 +24,6 @@ public class Gerente extends Empregado {
 
 	@Override
 	public String toString() {
-		return "Gerente [comissao=" + comissao + "]";
+		return "Gerente [comissao=" + comissao + "]" + super.toString();
 	}
 }

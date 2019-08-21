@@ -11,4 +11,8 @@ public class EmpregadoOperacional extends Empregado {
 		return this.getSalarioBase() * 0.85;
 	}
 
+	@Override
+	public String toString() {
+		return "EmpregadoOperacional []" + super.toString();
+	}
 }

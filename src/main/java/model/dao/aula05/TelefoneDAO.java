@@ -22,8 +22,6 @@ public class TelefoneDAO implements BaseDAO<Telefone> {
 				+ "VALUES (?,?,?,?,?,?)";
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql, 
 				PreparedStatement.RETURN_GENERATED_KEYS);
-		ResultSet rs = null;
-		
 		try {
 			stmt.setString(1, novoTelefone.getCodigoPais());
 			stmt.setString(2, novoTelefone.getDdd());
@@ -43,7 +41,6 @@ public class TelefoneDAO implements BaseDAO<Telefone> {
 			System.out.println("Erro ao inserir novo telefone.");
 			System.out.println("Erro: " + e.getMessage());
 		}finally {
-			Banco.closeResultSet(rs);
 			Banco.closePreparedStatement(stmt);
 			Banco.closeConnection(conn);
 		}

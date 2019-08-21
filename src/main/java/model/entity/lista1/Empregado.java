@@ -2,6 +2,7 @@ package model.entity.lista1;
 
 public abstract class Empregado {
 	
+	private int id;
 	private String nome;
 	private String cpf;
 	private char sexo;
@@ -115,5 +116,13 @@ public abstract class Empregado {
 		return "Empregado [nome=" + nome + ", cpf=" + cpf + ", sexo=" + sexo + ", idade=" + idade + ", salarioBruto="
 				+ salarioBruto + ", descontoImpostoRenda=" + descontoImpostoRenda + ", descontoPrevidencia="
 				+ descontoPrevidencia + ", salarioBase=" + salarioBase + "]";
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
