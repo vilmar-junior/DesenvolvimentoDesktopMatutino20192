@@ -131,9 +131,30 @@ public class EmpregadoDAO implements BaseDAO<Empregado> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	public ArrayList<Empregado> consultarPorTipo(String tipoEmpregado){
 		//TODO implementar -> select * from empregado where tipo = 'G'
 		return null;
 	}
-}
+
+	public boolean temCPFCadastrado(String cpf) {
+		String sql = " SELECT id FROM EMPREGADO E "
+				+ " WHERE E.CPF = " + cpf;
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+
+		ResultSet rs = null;
+		boolean cpfJaCadastrado = false;
+		
+		try {
+			rs = stmt.executeQuery(sql);
+			cpfJaCadastrado = rs.next();
+			
+		}catch (SQLException e) {
+			System.out.println("Erro verificar se CPF " + cpf + " já está cadastrado");
+			System.out.println("Erro: " + e.getMessage());
+		}
+
+			return cpfJaCadastrado;
+		}
+	}
