@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import model.dao.Banco;
 import model.dao.BaseDAO;
+import model.entity.aula05.Endereco;
 import model.entity.lista1.Diretor;
 import model.entity.lista1.Empregado;
 import model.entity.lista1.EmpregadoOperacional;
@@ -76,8 +77,22 @@ public class EmpregadoDAO implements BaseDAO<Empregado> {
 
 	@Override
 	public boolean excluir(int id) {
-		// TODO Auto-generated method stub
-		return false;
+		Connection conexao = Banco.getConnection();
+		Statement statement = Banco.getStatement(conexao);
+		String sql = " DELETE FROM EMPREGADO WHERE ID = " + id;
+
+		int quantidadeRegistrosExcluidos = 0;
+		try {
+			quantidadeRegistrosExcluidos = statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			System.out.println("Erro ao excluir empregado.");
+			System.out.println("Erro: " + e.getMessage());
+		}finally {
+			Banco.closePreparedStatement(statement);
+			Banco.closeConnection(conexao);
+		}
+
+		return quantidadeRegistrosExcluidos > 0;
 	}
 
 	@Override
@@ -128,8 +143,61 @@ public class EmpregadoDAO implements BaseDAO<Empregado> {
 
 	@Override
 	public ArrayList<Empregado> consultarTodos() {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conexao = Banco.getConnection();
+		String sql = " SELECT * FROM EMPREGADO";
+		ResultSet resultadoDaConsulta = null;
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
+		ArrayList<Empregado> empregados = new ArrayList<Empregado>();
+		
+		try {
+			resultadoDaConsulta = stmt.executeQuery();
+			while(resultadoDaConsulta.next()) {
+				Empregado empregadoBuscado = construirDoResultSet(resultadoDaConsulta);
+				empregados.add(empregadoBuscado);
+			}
+		}catch(SQLException ex) {
+			System.out.println("Erro ao consultar empregados cadastrados ");
+			System.out.println("Erro: " + ex.getMessage());
+		}finally {
+			Banco.closeResultSet(resultadoDaConsulta);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conexao);
+		}
+		
+		return empregados;
+	}
+
+	private Empregado construirDoResultSet(ResultSet rs) {
+		Empregado empregadoBuscado = null;
+		try {
+			int id = rs.getInt("id");
+			String tipo = rs.getString("tipo");
+			String nome = rs.getString("nome");
+			String cpf = rs.getString("cpf");
+			char sexo = rs.getString("sexo").charAt(0);
+			int idade = rs.getInt("idade");
+			double salarioBruto = rs.getDouble("salarioBruto");
+			double comissao = rs.getDouble("comissao");
+			
+			switch (tipo) {
+			case TIPO_EMPREGADO_DIRETOR:
+				empregadoBuscado = new Diretor(nome, cpf, sexo, idade, salarioBruto, comissao);
+				break;
+			case TIPO_EMPREGADO_GERENTE:
+				empregadoBuscado = new Gerente(nome, cpf, sexo, idade, salarioBruto, comissao);
+				break;
+			case TIPO_EMPREGADO_OPERACIONAL:
+				empregadoBuscado = new EmpregadoOperacional(nome, cpf, sexo, idade, salarioBruto);
+				break;	
+			}
+			
+			empregadoBuscado.setId(id);
+		} catch (SQLException e) {
+			System.out.println("Erro ao construir empregado a partir do ResultSet");
+			System.out.println("Erro: " + e.getMessage());
+		}
+		
+		return empregadoBuscado;
 	}
 
 	public ArrayList<Empregado> consultarPorTipo(String tipoEmpregado){

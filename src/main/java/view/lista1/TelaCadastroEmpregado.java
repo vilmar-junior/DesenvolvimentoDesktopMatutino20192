@@ -25,6 +25,7 @@ import javax.swing.JSpinner;
 
 public class TelaCadastroEmpregado {
 
+	private static final Integer IDADE_MINIMA_EMPREGADO = 14;
 	private JFrame frmCadastroDeEmpregado;
 	private JTextField txtNome;
 	private JTextField txtCPF;
@@ -179,6 +180,7 @@ public class TelaCadastroEmpregado {
 		txtComissao.setColumns(10);
 		
 		spnIdade = new JSpinner();
+		spnIdade.setValue(IDADE_MINIMA_EMPREGADO);
 		spnIdade.setBounds(111, 131, 120, 20);
 		frmCadastroDeEmpregado.getContentPane().add(spnIdade);
 	}

@@ -1,5 +1,7 @@
 package controller.lista1;
 
+import java.util.ArrayList;
+
 import model.bo.lista1.EmpregadoBO;
 import model.dao.lista1.EmpregadoDAO;
 import model.entity.lista1.Diretor;
@@ -47,7 +49,17 @@ public class EmpregadoController {
 		
 		return mensagem.toString();
 	}
+	
+	public ArrayList<Empregado> consultarTodos(){
+		EmpregadoBO bo = new EmpregadoBO();
+		return bo.consultarTodos();
+	}
 
+	public String excluir(Empregado empSelecionado) {
+		EmpregadoBO bo = new EmpregadoBO();
+		return bo.excluir(empSelecionado);
+	}
+	
 	private double validarValorMonetario(String valorEmString, String nomeDoValor, StringBuilder mensagem) {
 		double valorDouble = 0;
 		String[] partes = valorEmString.split(",");
@@ -97,4 +109,5 @@ public class EmpregadoController {
 			mensagem.append("Nome deve ter no mínimo 3 letras \n");
 		}
 	}
+
 }
