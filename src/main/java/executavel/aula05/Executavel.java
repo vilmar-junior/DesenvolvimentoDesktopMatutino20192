@@ -20,18 +20,6 @@ public class Executavel {
 	private static final String CODIGO_PAIS_BRASIL = "55";
 
 	public static void main(String[] args) {
-		Diretor d = new Diretor("Edson Arantes", "12345678901", 'M', 75, 12000.5, 500); 
-		Gerente g = new Gerente("Artur Antunes", "11111111111", 'M', 60, 8000.5, 200);
-		EmpregadoOperacional op = new EmpregadoOperacional("José das Couves", "99999999999", 'M', 20, 1000.5);
-		
-		EmpregadoDAO dao = new EmpregadoDAO();
-//		dao.salvar(d);
-//		dao.salvar(g);
-//		dao.salvar(op);
-		
-		Empregado emp = dao.consultarPorId(2);
-		System.out.println(emp.toString());
-		
 		// exercício 1
 		// criarClientesMostrarNoConsole();
 

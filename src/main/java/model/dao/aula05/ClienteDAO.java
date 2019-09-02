@@ -172,7 +172,7 @@ public class ClienteDAO implements BaseDAO<Cliente> {
 			cli.setEndereco(endereco);
 
 			TelefoneDAO telefDAO = new TelefoneDAO();
-			ArrayList<Telefone> telefones = telefDAO.consultarPorIdCliente(rs.getInt("id"));
+			ArrayList<Telefone> telefones = telefDAO.consultarTodosPorIdCliente(rs.getInt("id"));
 			cli.setTelefones(telefones);
 		} catch (SQLException e) {
 			System.out.println("Erro ao construir cliente do ResultSet");

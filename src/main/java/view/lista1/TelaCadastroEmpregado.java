@@ -116,7 +116,8 @@ public class TelaCadastroEmpregado {
 				String tipoSelecionado = (String) cbTipo.getSelectedItem(); 
 				
 				EmpregadoController controlador = new EmpregadoController();
-				String mensagem = controlador.salvar(nome, cpf, sexo, idade, txtSalarioBruto.getText(), txtComissao.getText(), tipoSelecionado);
+				String mensagem = controlador.salvar(nome, cpf, sexo, idade, 
+						txtSalarioBruto.getText(), txtComissao.getText(), tipoSelecionado);
 				
 				JOptionPane.showMessageDialog(null, mensagem);
 			}

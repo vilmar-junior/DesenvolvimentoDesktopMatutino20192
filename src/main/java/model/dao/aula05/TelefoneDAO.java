@@ -149,7 +149,7 @@ public class TelefoneDAO implements BaseDAO<Telefone> {
 		return telefones;
 	}
 	
-	public ArrayList<Telefone> consultarPorIdCliente(int idCliente) {
+	public ArrayList<Telefone> consultarTodosPorIdCliente(int idCliente) {
 		Connection conn = Banco.getConnection();
 		String sql = " SELECT id, codigoPais, ddd, numero, tipoLinha, idCliente, ativo "
 				+ " FROM TELEFONE "
