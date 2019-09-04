@@ -138,6 +138,7 @@ public class TelaCadastroCliente extends JFrame {
 
 					if (novoCliente.getId() > 0) {
 						btnAdicionarTelefone.setEnabled(true);
+						cbTipo.setEnabled(true);
 						btnSalvar.setEnabled(false);
 					}
 				} else {
@@ -189,6 +190,7 @@ public class TelaCadastroCliente extends JFrame {
 		contentPane.add(lblTipo);
 
 		cbTipo = new JComboBox(tipos);
+		cbTipo.setEnabled(false);
 		cbTipo.setBounds(400, 140, 100, 20);
 		cbTipo.setSelectedIndex(-1);
 		contentPane.add(cbTipo);
@@ -214,6 +216,7 @@ public class TelaCadastroCliente extends JFrame {
 					if (mensagemValidacao.isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Telefone " + "adicionado", "Sucesso",
 								JOptionPane.INFORMATION_MESSAGE);
+						limparFormularioCadastroTelefone();
 					} else {
 						JOptionPane.showMessageDialog(null, mensagemValidacao, "Atenção", JOptionPane.WARNING_MESSAGE);
 					}
@@ -221,6 +224,8 @@ public class TelaCadastroCliente extends JFrame {
 				} else {
 					JOptionPane.showMessageDialog(null, mensagemValidacao, "Atenção", JOptionPane.WARNING_MESSAGE);
 				}
+				atualizarTabelaTelefones();
+				
 			}
 		});
 		btnAdicionarTelefone.setEnabled(false);
@@ -241,7 +246,7 @@ public class TelaCadastroCliente extends JFrame {
 		lblTelefonesCadastrados.setForeground(Color.WHITE);
 		lblTelefonesCadastrados.setBackground(Color.DARK_GRAY);
 
-		// Para que a cor de fundo do label apare�a
+		// Para que a cor de fundo do label apareça
 		lblTelefonesCadastrados.setOpaque(true);
 
 		lblTelefonesCadastrados.setHorizontalAlignment(SwingConstants.CENTER);
@@ -255,6 +260,14 @@ public class TelaCadastroCliente extends JFrame {
 		cbEndereco.setBounds(94, 40, 406, 20);
 		cbEndereco.setSelectedIndex(-1);
 		contentPane.add(cbEndereco);
+	}
+
+	protected void limparFormularioCadastroTelefone() {
+		txtCodigoPais.setText("");
+		txtDdd.setText("");
+		txtNumero.setText("");
+		cbTipo.setSelectedIndex(-1);
+		
 	}
 
 	private void consultarEnderecos() {

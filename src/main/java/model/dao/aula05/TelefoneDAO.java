@@ -225,8 +225,10 @@ public class TelefoneDAO implements BaseDAO<Telefone> {
 	}
 
 	public boolean telefoneJaCadastrado(Telefone novoTelefone) {
-		String sql = " SELECT ID FROM TELEFONE T " + " WHERE T.CODIGOPAIS = " + novoTelefone.getCodigoPais()
-				+ " AND T.DDD = " + novoTelefone.getDdd() + " AND T.NUMERO = " + novoTelefone.getNumero();
+		String sql = " SELECT ID FROM TELEFONE T " 
+				+ " WHERE T.CODIGOPAIS = " + novoTelefone.getCodigoPais()
+				+ " AND T.DDD = " + novoTelefone.getDdd() 
+				+ " AND T.NUMERO = " + novoTelefone.getNumero();
 
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
