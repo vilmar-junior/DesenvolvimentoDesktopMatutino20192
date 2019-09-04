@@ -16,169 +16,128 @@ import model.entity.aula05.Telefone;
 public class ClienteDAO implements BaseDAO<Cliente> {
 
 	public Cliente salvar(Cliente novoCliente) {
-		String sql = " INSERT INTO CLIENTE (NOME, SOBRENOME, CPF, IDENDERECO)" + "VALUES (?,?,?,?) ";
-		ResultSet rs = null;
-		
-		// Exemplo de try with resources -> tudo que está dentro dos parênteses do try
-		// será fechado, igual a como faziámos no finally
-		try (Connection conexao = Banco.getConnection();
-				PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql, PreparedStatement.RETURN_GENERATED_KEYS);){
-			prepStmt.setString(1, novoCliente.getNome());
-			prepStmt.setString(2, novoCliente.getSobrenome());
-			prepStmt.setString(3, novoCliente.getCpf());
-
-			if (novoCliente.getEndereco() != null) {
-				prepStmt.setInt(4, novoCliente.getEndereco().getId());
-			} else {
-				// Cliente sem endereço
-				prepStmt.setInt(4, 0);
-			}
-
-			prepStmt.execute();
-			rs = prepStmt.getGeneratedKeys();
-
-			if (rs.next()) {
+		Connection conexao = Banco.getConnection();
+		String sql = " INSERT INTO CLIENTE(NOME, SOBRENOME, CPF, IDENDERECO) "
+				+ " VALUES (?,?,?,?)";
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql, 
+				PreparedStatement.RETURN_GENERATED_KEYS);
+		try {
+			stmt.setString(1, novoCliente.getNome());
+			stmt.setString(2, novoCliente.getSobrenome());
+			stmt.setString(3, novoCliente.getCpf());
+			stmt.setInt(4, novoCliente.getEndereco().getId());
+			stmt.execute();
+			
+			ResultSet rs = stmt.getGeneratedKeys();
+			
+			if(rs.next()) {
 				int idGerado = rs.getInt(1);
 				novoCliente.setId(idGerado);
 			}
-
+			
 			TelefoneDAO telDAO = new TelefoneDAO();
-			telDAO.ativarTelefones(novoCliente);
-		} catch (Exception e) {
-			System.out.println("Erro ao inserir novo cliente.");
+			telDAO.ativarTelefones(novoCliente, novoCliente.getTelefones());
+		} catch (SQLException e) {
+			System.out.println("Erro ao inserir novo endereço.");
 			System.out.println("Erro: " + e.getMessage());
-		} finally {
-			Banco.closeResultSet(rs);
 		}
-
+		
 		return novoCliente;
 	}
 
 	public boolean excluir(int id) {
-
-		String sql = " DELETE FROM CLIENTE WHERE ID = " + id;
-
-		int quantidadeRegistrosExcluidos = 0;
-
-		// Exemplo de try with resources -> tudo que está dentro dos parênteses do try
-		// será fechado, igual a como faziámos no finally
-		try (Connection conexao = Banco.getConnection(); 
-				Statement statement = Banco.getStatement(conexao);) {
-			quantidadeRegistrosExcluidos = statement.executeUpdate(sql);
-			TelefoneDAO tDAO = new TelefoneDAO();
-			tDAO.desativarTelefones(id);
+		//Apagar IDCLIENTE de todos os telefones do cliente
+		TelefoneDAO tDAO = new TelefoneDAO();
+		tDAO.desativarTelefones(id);
+		
+		//Apagar o cliente
+		Connection conn = Banco.getConnection();
+		String sql = "DELETE FROM CLIENTE WHERE ID= " + id;
+		Statement stmt = Banco.getStatement(conn);
+		
+		int quantidadeLinhasAfetadas = 0;
+		try {
+			quantidadeLinhasAfetadas = stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			System.out.println("Erro ao excluir cliente.");
 			System.out.println("Erro: " + e.getMessage());
 		}
-
-		return quantidadeRegistrosExcluidos > 0;
+		
+		return quantidadeLinhasAfetadas > 0;
 	}
 
 	public boolean alterar(Cliente cliente) {
 		Connection conexao = Banco.getConnection();
-		String sql = " UPDATE CLIENTE " + " SET NOME=?, SOBRENOME=?, CPF=?, IDENDERECO=? " + " WHERE ID=?";
-		PreparedStatement prepStmt = Banco.getPreparedStatement(conexao, sql);
-
-		int quantidadeRegistrosAtualizados = 0;
+		String sql = " UPDATE CLIENTE"
+				+ "SET NOME=?, SOBRENOME=?, CPF=?, IDENDERECO=? "
+				+ " WHERE ID = ?";
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
+		int registrosAlterados = 0;
 		try {
-			prepStmt.setString(1, cliente.getNome());
-			prepStmt.setString(2, cliente.getSobrenome());
-			prepStmt.setString(3, cliente.getCpf());
-
-			if (cliente.getEndereco() != null) {
-				prepStmt.setInt(4, cliente.getEndereco().getId());
-			} else {
-				// Cliente sem endereço
-				prepStmt.setInt(4, 0);
-			}
-			prepStmt.setInt(5, cliente.getId());
-			quantidadeRegistrosAtualizados = prepStmt.executeUpdate();
-
+			stmt.setString(1, cliente.getNome());
+			stmt.setString(2, cliente.getSobrenome());
+			stmt.setString(3, cliente.getCpf());
+			stmt.setInt(4, cliente.getEndereco().getId());
+			stmt.setInt(5, cliente.getId());
+			registrosAlterados = stmt.executeUpdate();
+			 
 			TelefoneDAO telDAO = new TelefoneDAO();
-			telDAO.ativarTelefones(cliente);
-		} catch (Exception e) {
-			System.out.println("Erro ao alterar cliente.");
+			telDAO.ativarTelefones(cliente, cliente.getTelefones());
+		} catch (SQLException e) {
+			System.out.println("Erro ao inserir novo cliente.");
 			System.out.println("Erro: " + e.getMessage());
-		} finally {
-			Banco.closePreparedStatement(prepStmt);
-			Banco.closeConnection(conexao);
 		}
-
-		return quantidadeRegistrosAtualizados > 0;
+		
+		return registrosAlterados > 0;
 	}
 
 	public Cliente consultarPorId(int id) {
-		Connection conexao = Banco.getConnection();
-		String sql = " SELECT * FROM CLIENTE WHERE ID= " + id;
-		Statement stmt = Banco.getStatement(conexao);
-		ResultSet rs = null;
-		
-		Cliente clienteConsultado = null;
-		try {
-			rs = stmt.executeQuery(sql);
-
-			if (rs.next()) {
-				clienteConsultado = construirClienteDoResultSet(rs);
-			}
-		} catch (SQLException e) {
-			System.out.println("Erro ao consultar cliente por id. Id: " + id);
-			System.out.println("Erro: " + e.getMessage());
-		}finally {
-			Banco.closeResultSet(rs);
-			Banco.closeStatement(stmt);
-			Banco.closeConnection(conexao);
-		}
-
-		return clienteConsultado;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public ArrayList<Cliente> consultarTodos() {
 		Connection conexao = Banco.getConnection();
 		String sql = " SELECT * FROM CLIENTE ";
-		Statement stmt = Banco.getStatement(conexao);
-		ResultSet rs = null;
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
 		
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		try {
-			rs = stmt.executeQuery(sql);
-
-			while (rs.next()) {
-				Cliente clienteConsultado = construirClienteDoResultSet(rs);
-				clientes.add(clienteConsultado);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				Cliente c = construirClienteDoResultSet(rs);
+				clientes.add(c);
 			}
+			
 		} catch (SQLException e) {
-			System.out.println("Erro ao consultar clientes ");
+			System.out.println("Erro ao consultar clientes.");
 			System.out.println("Erro: " + e.getMessage());
-		}finally {
-			Banco.closeResultSet(rs);
-			Banco.closeStatement(stmt);
-			Banco.closeConnection(conexao);
 		}
-
+		
 		return clientes;
 	}
 
 	private Cliente construirClienteDoResultSet(ResultSet rs) {
-		Cliente cli = new Cliente();
+		Cliente c = new Cliente();
 		try {
-			cli.setId(rs.getInt("id"));
-			cli.setNome(rs.getString("nome"));
-			cli.setSobrenome(rs.getString("sobrenome"));
-			cli.setCpf(rs.getString("cpf"));
+			c.setId(rs.getInt("id"));
+			c.setNome(rs.getString("nome"));
+			c.setSobrenome(rs.getString("sobrenome"));
+			c.setCpf(rs.getString("cpf"));
 
 			EnderecoDAO enderecoDAO = new EnderecoDAO();
-			Endereco endereco = enderecoDAO.consultarPorId(rs.getInt("idEndereco"));
-			cli.setEndereco(endereco);
-
-			TelefoneDAO telefDAO = new TelefoneDAO();
-			ArrayList<Telefone> telefones = telefDAO.consultarTodosPorIdCliente(rs.getInt("id"));
-			cli.setTelefones(telefones);
+			Endereco end = enderecoDAO.consultarPorId(rs.getInt("idendereco"));
+			c.setEndereco(end);
+			
+			TelefoneDAO telefoneDAO = new TelefoneDAO();
+			ArrayList<Telefone> telefones = telefoneDAO.consultarTodosPorIdCliente(rs.getInt("id"));
+			c.setTelefones(telefones);
 		} catch (SQLException e) {
-			System.out.println("Erro ao construir cliente do ResultSet");
+			System.out.println("Erro ao construir cliente a partir do ResultSet.");
 			System.out.println("Erro: " + e.getMessage());
 		}
-
-		return cli;
+		
+		return null;
 	}
+
 }

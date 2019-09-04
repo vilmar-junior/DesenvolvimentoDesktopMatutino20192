@@ -6,14 +6,9 @@ import java.util.Random;
 import model.dao.aula05.ClienteDAO;
 import model.dao.aula05.EnderecoDAO;
 import model.dao.aula05.TelefoneDAO;
-import model.dao.lista1.EmpregadoDAO;
 import model.entity.aula05.Cliente;
 import model.entity.aula05.Endereco;
 import model.entity.aula05.Telefone;
-import model.entity.lista1.Diretor;
-import model.entity.lista1.Empregado;
-import model.entity.lista1.EmpregadoOperacional;
-import model.entity.lista1.Gerente;
 
 public class Executavel {
 
@@ -24,7 +19,7 @@ public class Executavel {
 		// criarClientesMostrarNoConsole();
 
 		// Métodos de testes da aula 2
-		//criarEndereco();
+		criarEndereco();
 		//excluirEndereco(1);
 		//atualizarEndereco();
 		//consultarEndereco(25);
@@ -35,60 +30,12 @@ public class Executavel {
 		// atualizarTelefone();
 		// consultarTelefones();
 		
-		//salvarNovoCliente();
-		//alterarCliente(3);
-		//excluirCliente(1);
-		//consultarCliente(2);
-		//consultarClientes();
-	}
-	
-	private static void consultarCliente(int id) {
-		ClienteDAO clienteDAO = new ClienteDAO();
-		Cliente clienteConsultado = clienteDAO.consultarPorId(id);
-		
-		System.out.println(clienteConsultado);
-	}
-	
-	private static void excluirCliente(int id) {
-		ClienteDAO clienteDAO = new ClienteDAO();
-		if (clienteDAO.excluir(id)) {
-			System.out.println("Excluiu");
-		} else {
-			System.out.println("Não excluiu");
-		}
-	}
-
-	private static void alterarCliente(int id) {
-		ClienteDAO clienteDAO = new ClienteDAO();
-		Cliente cli = clienteDAO.consultarPorId(id);
-		cli.setNome("Pedro");
-		cli.setSobrenome("Alterado de Souza");
-		
-		if(clienteDAO.alterar(cli)) {
-			System.out.println("Alterou o cliente");
-		}else {
-			System.out.println("Não alterou o cliente");
-		}
-	}
-
-	private static void consultarClientes() {
-		ClienteDAO clienteDAO = new ClienteDAO();
-		System.out.println("************* Todos os clientes *************");
-		System.out.println("");
-		ArrayList<Cliente> todosOsClientes = clienteDAO.consultarTodos();
-
-		for (Cliente cli : todosOsClientes) {
-			System.out.println(cli);
-		}
-		System.out.println("");
-		System.out.println("**********************************************");
+		salvarNovoCliente();
 		
 	}
 
 	private static void salvarNovoCliente() {
-		Cliente c = new Cliente("José", "da Silva Sauro", "55577788811", 
-				criarTelefones(), 
-				criarEndereco());
+		Cliente c = new Cliente("José", "da Silva Sauro", "55577788811", criarTelefones(), criarEndereco());
 		ClienteDAO cliDAO = new ClienteDAO();
 		c = cliDAO.salvar(c);
 		
@@ -166,7 +113,7 @@ public class Executavel {
 
 	private static void atualizarTelefone() {
 		TelefoneDAO telefoneDAO = new TelefoneDAO();
-		Telefone telefoneQueSeraAtualizado = new Telefone(2, 0, "88", "66", "1232-3211", "Móvel", false);
+		Telefone telefoneQueSeraAtualizado = new Telefone(2, null, "88", "66", "1232-3211", "Móvel", false);
 		if (telefoneDAO.alterar(telefoneQueSeraAtualizado)) {
 			System.out.println("Alterou");
 		} else {
@@ -197,7 +144,7 @@ public class Executavel {
 
 		// Construção da lista de telefones
 		ArrayList<Telefone> telefonesCliente1 = new ArrayList<Telefone>();
-		Telefone tel1 = new Telefone(0, 0, "55", "048", "2020-5555", "Fixa", true);
+		Telefone tel1 = new Telefone(0, null, "55", "048", "2020-5555", "Fixa", true);
 		telefonesCliente1.add(tel1);
 
 		// Listas de telefones são criadas por um método auxiliar criarTelefones()
@@ -254,9 +201,9 @@ public class Executavel {
 	 */
 	private static ArrayList<Telefone> criarTelefones() {
 		ArrayList<Telefone> telefones = new ArrayList<Telefone>();
-		telefones.add(new Telefone(0, 0, CODIGO_PAIS_BRASIL, criarDdd(), criarNumeroTelefone(), "Fixa", true));
-		telefones.add(new Telefone(0, 0, CODIGO_PAIS_BRASIL, criarDdd(), criarNumeroTelefone(), "Fixa", true));
-		telefones.add(new Telefone(0, 0, CODIGO_PAIS_BRASIL, criarDdd(), criarNumeroTelefone(), "Móvel", true));
+		telefones.add(new Telefone(0, null, CODIGO_PAIS_BRASIL, criarDdd(), criarNumeroTelefone(), "Fixa", true));
+		telefones.add(new Telefone(0, null, CODIGO_PAIS_BRASIL, criarDdd(), criarNumeroTelefone(), "Fixa", true));
+		telefones.add(new Telefone(0, null, CODIGO_PAIS_BRASIL, criarDdd(), criarNumeroTelefone(), "Móvel", true));
 
 		return telefones;
 	}

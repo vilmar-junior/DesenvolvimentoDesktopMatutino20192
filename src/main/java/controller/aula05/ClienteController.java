@@ -1,12 +1,13 @@
 package controller.aula05;
 
+import model.bo.aula05.ClienteBO;
 import model.dao.aula05.ClienteDAO;
 import model.entity.aula05.Cliente;
 import model.entity.aula05.Endereco;
 
 public class ClienteController {
 	
-	private ClienteDAO dao = new ClienteDAO();
+	private ClienteBO bo = new ClienteBO();
 
 	public String validarCamposSalvar(String nomeDigitado, String sobrenomeDigitado, String cpfDigitado,
 			Endereco enderecoSelecionado) {
@@ -33,6 +34,6 @@ public class ClienteController {
 	}
 
 	public Cliente salvar(Cliente novoCliente) {
-		return dao.salvar(novoCliente);
+		return bo.salvar(novoCliente);
 	}
 }
