@@ -29,8 +29,9 @@ public class TelefoneBO {
 		String mensagem = "";
 
 		if (dao.telefoneJaCadastrado(novoTelefone)) {
-			mensagem = "O telefone +" + novoTelefone.getCodigoPais() + " (" + novoTelefone.getDdd() + ") "
-					+ novoTelefone.getNumero() + " já está " + "cadastrado";
+			mensagem = "O telefone +" + novoTelefone.getCodigoPais() 
+				+ " (" + novoTelefone.getDdd() + ") "
+				+ novoTelefone.getNumero() + " já está " + "cadastrado";
 		} else {
 			novoTelefone = dao.salvar(novoTelefone);
 
